@@ -8,7 +8,39 @@
 
         <script>
 
-            // TODO: Add code to check answers to questions
+            /* TODO: Add code to check answers to questions */
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('1-6').addEventListener('click', function() {
+                alert("Correct answer!");
+                });
+                document.getElementById('6-1').addEventListener('click', function() {
+                alert("Incorrect answer!");
+                });
+                document.getElementById('3-1').addEventListener('click', function() {
+                alert("Incorrect answer!");
+                });
+                document.getElementById('1-1').addEventListener('click', function() {
+                alert("Incorrect answer!");
+                });
+                document.getElementById('1-3').addEventListener('click', function() {
+                alert("Incorrect answer!");
+                });
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelector('form').addEventListener('submit', function() {
+                    let answer = document.querySelector('#answer').value;
+                    if (answer == "Switzerland" || answer == "switzerland")
+                    {
+                        alert("Correct answer!");
+                    }
+                    else
+                    {
+                        alert("Incorrect answer!");
+
+                    }
+                });
+            });
 
         </script>
 
@@ -26,7 +58,12 @@
                 <hr>
 
                 <!-- TODO: Add multiple choice question here -->
-
+                <p>What is the approximate ratio of people to sheep in New Zealand?</p>
+                <button id=6-1>6 people per 1 sheep</button>
+                <button id=3-1>3 people per 1 sheep</button>
+                <button id=1-1>1 person per 1 sheep</button>
+                <button id=1-3>1 person per 3 sheep</button>
+                <button id=1-6>1 person per 6 sheep</button>
             </div>
 
             <div class="section">
@@ -34,6 +71,12 @@
                 <hr>
 
                 <!-- TODO: Add free response question here -->
+                <p>In which country is it illegal to own only one guinea pig, as a lone guinea pig might get lonely?</p>
+                <form>
+                    <label>Answer:</label>
+                    <input type = "text" id="answer" autocomplete="off"/>
+                    <button id=submit>Submit</button>
+                </form>
 
             </div>
 
