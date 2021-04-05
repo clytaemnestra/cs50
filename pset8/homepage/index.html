@@ -11,28 +11,29 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-    <div class="all">
-        <nav>
-            <a href="#">Home</a>
-            <a href="#">Projects</a>
-            <a href="#">Contact</a>
-            <a class="lang-chooser" href="#">choose the lang!</a>
-        </nav>
+        <div class="all">
+            <nav>
+                <button>Home</button>
+                <button>Contact</button>
+                <button class="lang-chooser" onclick="dropdownFunction()">Language</button>
+                  <div id="dropdown" class="dropdown-content">
+                  <a>czech</a>
+            </nav>
 
-        <header>
-            <p class="greeting-word">Hi, I'm Mia!</p>
-            <img class="header-img" src="https://satyr.io/600x300/red">
-            <p>Text | Text | Text | Text</p>
-        </header>
+            <header>
+                <p class="greeting-word">Hi, I'm Mia!</p>
+                <img class="header-img" src="https://satyr.io/300x300/lightblue">
+                <p class="description-text">Student | Application Support Specialist | some hobby </p>
+            </header>
 
-        <main>
-            <a href="#">projects</a>
-            <a href="#">work experience</a>
-            <a href="#">education</a>
-            <a href="#">hobbies</a>
-        </main>
+            <main>
+                <button href="#">projects</button>
+                <button href="#">work experience</button>
+                <button href="#">education</button>
+                <button href="#">hobbies</button>
+            </main>
 
-        <footer>© Mia Bajić | mia_bajic@live.com</footer>
-    </div>
+            <footer>© Mia Bajić | mia_bajic@live.com</footer>
+        </div>
     </body>
 </html>
