@@ -1,18 +1,17 @@
+
 *,
 ::after,
 ::before {
     box-sizing: border-box;
 }
 
-html {
-    font-family: 'Courier New', sans-serif;
-}
-
 .all {
     display: flex;
     flex-direction: column;
-    background-color: #00909E;
-    color: #DAE1E7;
+    background-color: #6B8EB7;
+    color: #25476D;
+    font-family: 'Courier New', sans-serif;
+    min-height: 100vh;
 }
 
 nav {
@@ -24,10 +23,11 @@ nav {
     grid-template-columns: repeat(auto-fit, minmax(var(--min), 1fr));
 }
 
-nav a,
+.nav-home,
+.nav-contact,
 .lang-chooser {
-    background-color: #00909E;
-    color: #DAE1E7;
+    background-color: #6B8EB7;
+    color: white;
     font-size: 1rem;
     padding: 1rem;
     margin-left: 1rem;
@@ -36,10 +36,14 @@ nav a,
     text-align: center;
 }
 
-nav a:hover,
+.nav-home:hover,
+.nav-contact:hover,
 .lang-chooser:hover {
-    background-color: #27496D;
+    background-color: #32527B;
     transition: 0.7s;
+  	text-decoration: none;
+    color: white;
+  	cursor: pointer;
 }
 
 .lang-chooser {
@@ -47,33 +51,34 @@ nav a:hover,
 }
 
 .dropdown-content {
-  display: none;
+    display: none;
 }
 
 main,
 header,
 footer {
-  padding: 1rem 2vw;
+    padding: 1rem 2vw;
 }
 
 header {
-    background-color: #27496D;
+    background-color: #BCD3E7;
     text-align: center;
+    color: #25476D;
 }
 
 body {
-    background-color: #00909E;
+    background-color: #BCD3E7;
     margin: 0;
 }
 
 .greeting-word {
     font-size: 4rem;
-    background-color: #27496D;
-    color: #DAE1E7;
+    background-color: #BCD3E7;
+    color: #25476D;
     font-family: "Brush Script MT", Brush Script Std, cursive}
 
 .header-img {
-    max-width: 200px;
+    max-width: 250px;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -86,13 +91,14 @@ body {
 }
 
 main {
-    background-color: #27496D;
+    background-color: #BCD3E7;
     text-align: center;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
     flex-wrap: wrap;
+    flex-grow: 1
 }
 
 main a {
@@ -101,11 +107,11 @@ main a {
     border-radius: 15px;
     max-width: 9rem;
     max-height: 4.5rem;
-    color: #DAE1E7;
+    color: white;
     display: flex;
-    align-items: center; 
+    align-items: center;
     justify-content: space-evenly;
-    background-color: #00909E;
+    background-color: #6B8EB7;
     font-size: 1rem;
     margin-top: 4rem;
     margin-bottom: 8rem;
@@ -114,12 +120,15 @@ main a {
 }
 
 main a:hover {
-    background-color: #27496D;
+    background-color: #32527B;
     transition: 0.7s;
+	  text-decoration: none;
+	  color: white;
 }
 
 footer {
-    margin-top: 1rem;
-    background-color: #00909E;
+    margin-top: auto;
+    background-color: #6B8EB7;
     text-align: center;
+    color: white;
 }
