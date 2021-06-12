@@ -155,10 +155,11 @@ footer {
 }
 
 .work-experience-section {
-    background-color: #BCD3E7;
+    background-color: #6B8EB7;
     max-width: 50%;
     margin-left: auto;
     margin-right: auto;
+    color: white;
 }
 
 .company, .profession {
