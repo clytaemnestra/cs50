@@ -15,10 +15,11 @@ db = SQL("sqlite:///birthdays.db")
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-
         # TODO: Add the user's entry into the database
-
-        return redirect("/")
+        name = request.form['name']
+        day = request.form['day']
+        month = request.form['month']
+        db.execute("INSERT INTO birthdays (name, day, month) VALUES (?, ?, ?)", (name, day, month))
 
     else:
         # TODO: Display the entries in the database on index.html

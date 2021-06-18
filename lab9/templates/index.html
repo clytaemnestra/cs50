@@ -15,6 +15,12 @@
 
                 <h2>Add a Birthday</h2>
                 <!-- TODO: Create a form for users to submit a name, a month, and a day -->
+                    <form action="/" method="post">
+                        <input name="name" placeholder="name" type=text autocomplete="off">
+                        <input day="birthday day" placeholder="birthday day" type=text autocomplete="off">
+                        <input month="birthday month" placeholder="birthday month" type=text autocomplete="off">
+                        <input type="submit" value="Add birthday">
+                    </form>
             </div>
 
             <div class="section">
@@ -32,7 +38,7 @@
                         {% for birthday in birthdays %}
                             <tr>
                                 <td>{{ birthday.name }}</td>
-                                <td>{{ birthday.month }}</td>
+                                <td>{{ birthday.day, birthday.month }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
