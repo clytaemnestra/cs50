@@ -1,4 +1,5 @@
 import os
+import re
 
 from cs50 import SQL
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
@@ -16,10 +17,11 @@ db = SQL("sqlite:///birthdays.db")
 def index():
     if request.method == "POST":
         # TODO: Add the user's entry into the database
-        name = request.form['name']
-        day = request.form['day']
-        month = request.form['month']
-        db.execute("INSERT INTO birthdays (name, day, month) VALUES (?, ?, ?)", (name, day, month))
+        name = request.form.get('name')
+        day = request.form.get('day')
+        month = request.form.get('month')
+        db.execute("INSERT INTO birthdays (name, day, month) VALUES (?, ?, ?)", name, day, month)
+        return redirect("/")
 
     else:
         # TODO: Display the entries in the database on index.html
