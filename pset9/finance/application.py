@@ -46,7 +46,8 @@ if not os.environ.get("API_KEY"):
 @login_required
 def index():
     """Show portfolio of stocks"""
-    return apology("TODO")
+    rows = db.execute("SELECT price, stock FROM purchase JOIN users on users.id = purchase.id WHERE users.id = ?", session["user_id"])
+    return render_template("index.html", rows = rows)
 
 
 @app.route("/buy", methods=["GET", "POST"])
@@ -69,11 +70,6 @@ def buy():
 
         rows = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])
         remaining_cash = rows[0]["cash"]
-        print(type(remaining_cash))
-        print(type(shares))
-        print(type(quote))
-        print(quote)
-        print(type(symbol))
 
         if remaining_cash < shares * quote:
             return apology("you must have enough of money on your account", 403)
@@ -194,7 +190,23 @@ def register():
 @login_required
 def sell():
     """Sell shares of stock"""
-    return apology("TODO")
+    if request.method == "GET":
+        stocks = db.execute("SELECT stock FROM purchase JOIN users ON users.id = purchase.id WHERE users.id = ?", session["user_id"])
+        return render_template("sell.html", stocks = stocks)
+
+    if request.method == "POST":
+        stock = request.form.get("stock")
+        if not stock:
+            return apology("must enter a valid stock", 403)
+
+        rows = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])
+        remaining_cash = rows[0]["cash"]
+
+        try:
+            db.execute("DELETE FROM purchase WHERE stock = ?", stock)
+            return redirect("/")
+        except:
+            return apology("there was an unspecified error", 403)
 
 
 def errorhandler(e):
