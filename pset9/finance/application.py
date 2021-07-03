@@ -195,7 +195,9 @@ def sell():
         return render_template("sell.html", stocks = stocks)
 
     if request.method == "POST":
-        stock = request.form.get("stock")
+        stock = request.form.get("stocks")
+        print(stock)
+        print(type(stock))
         if not stock:
             return apology("must enter a valid stock", 403)
 
