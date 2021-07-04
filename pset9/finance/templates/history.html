@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Overview
+{% endblock %}
+
+{% block main %}
+<table>
+<tr>
+    <th>Price</th>
+    <th>Amount</th>
+    <th>Stock</th>
+    <th>Time</th>
+    <th>Bought or Sold</th>
+</tr>
+{% for row in rows %}
+    <tr>
+        <td>{{ row['price'] }}</td>
+        <td>{{ row['amount'] }}</td>
+        <td>{{ row['stock'] }}</td>
+        <td>{{ row['timestamp'] }}</td>
+        <td>{{ row['buy_sell'] }}</td>
+    </tr>
+{% endfor %}
+</table>
+{% endblock %}

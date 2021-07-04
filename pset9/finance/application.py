@@ -46,7 +46,8 @@ if not os.environ.get("API_KEY"):
 @login_required
 def index():
     """Show portfolio of stocks"""
-    rows = db.execute("SELECT price, stock FROM purchase JOIN users on users.id = purchase.id WHERE users.id = ?", session["user_id"])
+    # rows = db.execute("SELECT price, stock FROM purchase JOIN users on users.id = purchase.id WHERE users.id = ?", session["user_id"])
+    rows = db.execute("SELECT price, stock, amount FROM transactions JOIN users on users.id = transactions.user_id WHERE users.id = ? AND buy_sell = 'buy' AND active = 'yes'", session["user_id"])
     return render_template("index.html", rows = rows)
 
 
@@ -75,7 +76,8 @@ def buy():
             return apology("you must have enough of money on your account", 403)
 
         else:
-            db.execute("INSERT INTO purchase (price, stock) VALUES (?, ?)", quote, symbol)
+            # db.execute("INSERT INTO purchase (price, stock) VALUES (?, ?)", quote, symbol)
+            db.execute("INSERT INTO transactions (price, stock, amount, buy_sell, active, user_id) VALUES (?, ?, ?, ?, ?, ?)", quote, symbol, 1, "buy", "yes", session["user_id"])
             return redirect("/")
 
 
@@ -85,8 +87,8 @@ def buy():
 @app.route("/history")
 @login_required
 def history():
-    """Show history of transactions"""
-    return apology("TODO")
+    rows = db.execute("SELECT price, stock, amount, buy_sell, timestamp FROM transactions JOIN users on users.id = transactions.user_id WHERE users.id = ?", session["user_id"])
+    return render_template("history.html", rows = rows)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -191,7 +193,7 @@ def register():
 def sell():
     """Sell shares of stock"""
     if request.method == "GET":
-        stocks = db.execute("SELECT stock FROM purchase JOIN users ON users.id = purchase.id WHERE users.id = ?", session["user_id"])
+        stocks = db.execute("SELECT stock FROM transactions JOIN users ON users.id = transactions.user_id WHERE users.id = ? AND buy_sell = 'buy' AND active = 'yes'", session["user_id"])
         return render_template("sell.html", stocks = stocks)
 
     if request.method == "POST":
@@ -204,11 +206,19 @@ def sell():
         rows = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])
         remaining_cash = rows[0]["cash"]
 
-        try:
-            db.execute("DELETE FROM purchase WHERE stock = ?", stock)
-            return redirect("/")
-        except:
-            return apology("there was an unspecified error", 403)
+        # try:
+            # db.execute("DELETE FROM purchase WHERE stock = ?", stock)
+            # db.execute("DELETE FROM purchase WHERE stock = ?", stock)
+        quote = lookup(stock)
+        db.execute("UPDATE transactions SET active = 'no' WHERE stock = ?", quote['symbol'])
+        db.execute("INSERT INTO transactions (price, stock, amount, buy_sell, active, user_id) VALUES (?, ?, ?, ?, ?, ?)", quote['price'], stock, 1, "sell", 'no', session["user_id"])
+        rows = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])
+        remaining_cash = rows[0]["cash"] - quote['price']
+        print("remaining: ", remaining_cash)
+        db.execute("UPDATE users SET cash = ? WHERE id = ?", remaining_cash, session["user_id"])
+        return redirect("/")
+        # except:
+        #     return apology("there was an unspecified error", 403)
 
 
 def errorhandler(e):
