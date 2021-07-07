@@ -1,4 +1,5 @@
 import os
+import re
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
@@ -61,23 +62,32 @@ def buy():
     if request.method == "POST":
         symbol = request.form.get("symbol")
         if not symbol:
-            return apology("must enter a valid symbol", 403)
+            return apology("must enter a valid symbol", 400)
 
         shares = int(request.form.get("shares"))
         if shares < 0:
-            return apology("please enter a positive number", 403)
+            return apology("please enter a positive number", 400)
+        elif not isinstance(shares, int):
+            return apology("please enter a valid amount of shares", 400)
 
-        quote = lookup(symbol)["price"]
+        quote = lookup(symbol)
 
-        rows = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])
-        remaining_cash = rows[0]["cash"]
-
-        if remaining_cash < shares * quote:
-            return apology("you must have enough of money on your account", 403)
+        if symbol != quote['symbol']:
+            return apology("please enter a valid symbol", 400)
 
         else:
-            # db.execute("INSERT INTO purchase (price, stock) VALUES (?, ?)", quote, symbol)
-            db.execute("INSERT INTO transactions (price, stock, amount, buy_sell, active, user_id) VALUES (?, ?, ?, ?, ?, ?)", quote, symbol, 1, "buy", "yes", session["user_id"])
+            rows = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])
+            remaining_cash = rows[0]["cash"]
+
+        if remaining_cash < shares * quote["price"]:
+            return apology("you must have enough of money on your account", 400)
+
+        else:
+            shares = request.form.get("shares")
+            db.execute("INSERT INTO transactions (price, stock, amount, buy_sell, active, user_id) VALUES (?, ?, ?, ?, ?, ?)", quote['price'], symbol, shares, "buy", "yes", session["user_id"])
+            remaining_cash_buy = rows[0]["cash"] - quote['price']
+            print("remaining: ", remaining_cash_buy)
+            db.execute("UPDATE users SET cash = ? WHERE id = ?", remaining_cash_buy, session["user_id"])
             return redirect("/")
 
 
@@ -103,11 +113,11 @@ def login():
 
         # Ensure username was submitted
         if not request.form.get("username"):
-            return apology("must provide username", 403)
+            return apology("must provide username", 400)
 
         # Ensure password was submitted
         elif not request.form.get("password"):
-            return apology("must provide password", 403)
+            return apology("must provide password", 400)
 
         # Query database for username
         rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
@@ -148,7 +158,7 @@ def quote():
             quote = lookup(symbol)
             return render_template("quoted.html", symbol=symbol, quote=quote['price'])
         except:
-            return apology("incorrect stock name or undefined error", 403)
+            return apology("incorrect stock name or undefined error", 400)
 
     else:
         return render_template("quote.html")
@@ -160,22 +170,28 @@ def register():
 
         # Ensure username was submitted
         if not request.form.get("username"):
-            return apology("must provide username", 403)
+            return apology("must provide username", 400)
 
         # Ensure password was submitted
         elif not request.form.get("password"):
-            return apology("must provide password", 403)
+            return apology("must provide password", 400)
 
         # ensure passwords match
         elif request.form.get("password") != request.form.get("confirmation"):
-            return apology("passwords do not match", 403)
+            return apology("passwords do not match", 400)
+
+        elif not re.search("[A-Z]", request.form.get("password")):
+            return apology("password must contain capital letters", 403)
+
+        elif not re.search("[0-9]", request.form.get("password")):
+            return apology("password must contain numbers", 403)
 
         # ensure user isn't already registered
         rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
 
         # Ensure username exists and password is correct
         if len(rows) == 1:
-            return apology("user already exists", 403)
+            return apology("user already exists", 400)
 
         # add user to the DB
         else:
@@ -198,27 +214,20 @@ def sell():
 
     if request.method == "POST":
         stock = request.form.get("stocks")
-        print(stock)
-        print(type(stock))
         if not stock:
             return apology("must enter a valid stock", 403)
 
         rows = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])
         remaining_cash = rows[0]["cash"]
 
-        # try:
-            # db.execute("DELETE FROM purchase WHERE stock = ?", stock)
-            # db.execute("DELETE FROM purchase WHERE stock = ?", stock)
         quote = lookup(stock)
         db.execute("UPDATE transactions SET active = 'no' WHERE stock = ?", quote['symbol'])
         db.execute("INSERT INTO transactions (price, stock, amount, buy_sell, active, user_id) VALUES (?, ?, ?, ?, ?, ?)", quote['price'], stock, 1, "sell", 'no', session["user_id"])
         rows = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])
-        remaining_cash = rows[0]["cash"] - quote['price']
-        print("remaining: ", remaining_cash)
+        remaining_cash = rows[0]["cash"] + quote['price']
         db.execute("UPDATE users SET cash = ? WHERE id = ?", remaining_cash, session["user_id"])
         return redirect("/")
-        # except:
-        #     return apology("there was an unspecified error", 403)
+
 
 
 def errorhandler(e):

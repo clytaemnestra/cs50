@@ -12,6 +12,9 @@
         <option value={{ stock['stock']  }}>{{ stock['stock'] }}</option>
         {% endfor %}
     </select>
-        <button class="btn btn-primary" type="submit">Sell</button>
+   <div class="form-group">
+        <input class="form-control" name="shares" placeholder="Shares" type="number">
+    </div>
+    <button class="btn btn-primary" type="submit">Sell</button>
     </form>
 {% endblock %}
